@@ -26,6 +26,22 @@ pipeline {
             }
         }
 
+        stage('Import Existing Resources') {
+            steps {
+                withCredentials([[
+                    $class: 'AmazonWebServicesCredentialsBinding',
+                    credentialsId: 'terraform-crd',
+                    accessKeyVariable: 'AWS_ACCESS_KEY_ID',
+                    secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'
+                ]]) {
+                    sh '''
+                        terraform import aws_key_pair.assesment-key assesment-key || true
+                        terraform import aws_s3_bucket.main ikramapzz-assesment-s3 || true
+                    '''
+                }
+            }
+        }
+
         stage('Terraform Plan') {
             steps {
                 withCredentials([[
@@ -80,10 +96,10 @@ pipeline {
 
     post {
         success {
-            echo 'Pipeline completed successfully! Frontend deployed and CloudFront cache invalidated.'
+            echo 'Pipeline completed successfully!'
         }
         failure {
-            echo 'Pipeline failed. Check stage logs above for the exact error.'
+            echo 'Pipeline failed. Check stage logs above.'
         }
     }
 }
