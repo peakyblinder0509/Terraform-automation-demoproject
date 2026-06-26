@@ -27,3 +27,7 @@ variable "ami_id" {
   type        = string
   default     = "ami-0f8a61b66d1accaee"
 }
+variable "ssh_public_key" {
+  description = "SSH public key for EC2 access"
+  type        = string
+}
