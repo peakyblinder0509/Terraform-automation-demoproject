@@ -68,16 +68,7 @@ pipeline {
             }
         }
 
-        stage('Build Frontend') {
-            steps {
-                dir('frontend') {
-                    sh 'npm install'
-                    sh 'npm run build'
-                }
-            }
-        }
-
-        stage('Deploy to S3 & Invalidate CloudFront') {
+        stage('Show Outputs') {
             steps {
                 withCredentials([[
                     $class: 'AmazonWebServicesCredentialsBinding',
@@ -85,10 +76,7 @@ pipeline {
                     accessKeyVariable: 'AWS_ACCESS_KEY_ID',
                     secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'
                 ]]) {
-                    sh """
-                        aws s3 sync frontend/build/ s3://ikramapzz-assesment-s3 --delete --region ${AWS_REGION}
-                        aws cloudfront create-invalidation --distribution-id E2XKG2DUHS6GBF --paths "/*"
-                    """
+                    sh 'terraform output'
                 }
             }
         }
@@ -96,10 +84,10 @@ pipeline {
 
     post {
         success {
-            echo 'Pipeline completed successfully!'
+            echo 'Terraform infra (VPC, EC2, S3, CloudFront) created/updated successfully!'
         }
         failure {
-            echo 'Pipeline failed. Check stage logs above.'
+            echo 'Pipeline failed. Check stage logs above for the exact error.'
         }
     }
 }
