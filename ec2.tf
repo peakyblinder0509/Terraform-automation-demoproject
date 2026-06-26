@@ -1,6 +1,6 @@
     resource "aws_key_pair" "assesment-key" {
   key_name   = "assesment-key"
-  public_key = file("~/.ssh/id_ed25519.pub")
+  public_key = var.ssh_public_key
 }
 resource "aws_instance" "master" {
   ami                    = "ami-0f8a61b66d1accaee"
