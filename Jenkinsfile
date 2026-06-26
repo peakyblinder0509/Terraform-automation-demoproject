@@ -9,7 +9,7 @@ pipeline{
     stages{
         stage('checkout'){
             steps{
-                git branch: 'main', credentialsId: 'git-cred', url: 'https://github.com/Client-Management-Project/CRM-Frontend-AdminPanel.git'
+                git branch: 'main', credentialsId: 'git-cred', url: 'https://github.com/peakyblinder0509/Terraform-automation-demoproject.git'
             }
         }
 
